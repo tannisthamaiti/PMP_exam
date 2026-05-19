@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMP Connections Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f7f6f2; --bg2:#eeecea; --bg3:#e5e3de; --surface:#ffffff;
+    --text:#1c1b18; --text2:#5a5852; --text3:#9a978f;
+    --border:rgba(0,0,0,0.1); --border2:rgba(0,0,0,0.18);
+    --blue-bg:#E6F1FB; --blue-mid:#B5D4F4; --blue-border:#185FA5; --blue-dark:#042C53; --blue-med:#0C447C;
+    --teal-bg:#E1F5EE; --teal-mid:#9FE1CB; --teal-border:#0F6E56; --teal-dark:#04342C; --teal-med:#085041;
+    --coral-bg:#FAECE7; --coral-mid:#F5C4B3; --coral-border:#993C1D; --coral-dark:#4A1B0C; --coral-med:#712B13;
+    --green-bg:#EAF3DE; --green-mid:#C0DD97; --green-border:#3B6D11; --green-dark:#173404;
+    --amber-bg:#FAEEDA; --amber-mid:#FAC775; --amber-border:#854F0B; --amber-dark:#412402; --amber-med:#633806;
+    --purple-bg:#EEEDFE; --purple-border:#534AB7; --purple-dark:#26215C;
+    --info-border:#185FA5;
+    --r-sm:8px; --r-md:12px; --r-pill:20px;
+  }
+  @media (prefers-color-scheme:dark) {
+    :root {
+      --bg:#181714; --bg2:#22211d; --bg3:#2c2b26; --surface:#22211d;
+      --text:#e8e6df; --text2:#a8a59d; --text3:#6a675f;
+      --border:rgba(255,255,255,0.1); --border2:rgba(255,255,255,0.18);
+      --blue-bg:#042C53; --blue-mid:#0C447C; --blue-border:#378ADD; --blue-dark:#E6F1FB; --blue-med:#B5D4F4;
+      --teal-bg:#04342C; --teal-mid:#085041; --teal-border:#1D9E75; --teal-dark:#E1F5EE; --teal-med:#9FE1CB;
+      --coral-bg:#4A1B0C; --coral-mid:#712B13; --coral-border:#D85A30; --coral-dark:#FAECE7; --coral-med:#F5C4B3;
+      --green-bg:#173404; --green-mid:#27500A; --green-border:#3B6D11; --green-dark:#EAF3DE;
+      --amber-bg:#412402; --amber-mid:#633806; --amber-border:#BA7517; --amber-dark:#FAEEDA; --amber-med:#FAC775;
+      --purple-bg:#26215C; --purple-border:#7F77DD; --purple-dark:#EEEDFE;
+      --info-border:#378ADD;
+    }
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  .header{background:var(--surface);border-bottom:0.5px solid var(--border2);padding:18px 28px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .header-title{font-size:17px;font-weight:600;letter-spacing:-.3px}
+  .header-sub{font-size:13px;color:var(--text3);font-family:'DM Mono',monospace}
+  .shell{max-width:900px;margin:0 auto;padding:28px 24px 60px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;border-bottom:0.5px solid var(--border);padding-bottom:16px}
+  .tab{border:0.5px solid var(--border2);border-radius:var(--r-pill);padding:6px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);background:transparent;font-family:'DM Sans',sans-serif;transition:all .15s}
+  .tab:hover{background:var(--bg2)}
+  .tab.on{border-color:var(--purple-border);color:var(--purple-dark);background:var(--purple-bg)}
+  .view{display:none}.view.on{display:block}
+  .slbl{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:10px}
+  .sec{margin-bottom:22px}
+  /* containers */
+  .cont{border-radius:var(--r-md);padding:16px;margin-bottom:14px}
+  .ctitle{font-size:13px;font-weight:600;margin-bottom:12px;letter-spacing:-.1px}
+  .crow{display:flex;gap:10px;flex-wrap:wrap}
+  .cc{border-radius:var(--r-sm);padding:10px 13px;flex:1;min-width:120px}
+  .cn{font-size:12px;font-weight:600}.cd{font-size:11px;margin-top:4px;line-height:1.45}
+  .pmp{background:var(--blue-bg);border:0.5px solid var(--blue-border)}
+  .pmp .ctitle{color:var(--blue-med)}.pmp .cc{background:var(--blue-mid);border:0.5px solid var(--blue-border)}
+  .pmp .cn{color:var(--blue-dark)}.pmp .cd{color:var(--blue-med)}
+  .sba{background:var(--teal-bg);border:0.5px solid var(--teal-border)}
+  .sba .ctitle{color:var(--teal-med)}.sba .cc{background:var(--teal-mid);border:0.5px solid var(--teal-border)}
+  .sba .cn{color:var(--teal-dark)}.sba .cd{color:var(--teal-med)}
+  /* budget */
+  .budg-out{background:var(--amber-bg);border:0.5px solid var(--amber-border);border-radius:var(--r-md);padding:14px}
+  .budg-out>.ctitle{color:var(--amber-dark)}
+  .budg-in{background:var(--coral-bg);border:0.5px solid var(--coral-border);border-radius:var(--r-sm);padding:12px;margin-bottom:10px}
+  .budg-in>.ctitle{color:var(--coral-med);font-size:12px;margin-bottom:10px}
+  .budg-in .cc{background:var(--coral-mid);border:0.5px solid var(--coral-border);border-radius:var(--r-sm);padding:9px 11px;flex:1;min-width:110px}
+  .budg-in .cn{color:var(--coral-dark)}.budg-in .cd{color:var(--coral-med)}
+  .budg-mgmt{background:var(--amber-mid);border:0.5px solid var(--amber-border);border-radius:var(--r-sm);padding:10px 13px}
+  .budg-mgmt .cn{color:var(--amber-dark);font-size:12px;font-weight:600}
+  .budg-mgmt .cd{color:var(--amber-border);font-size:11px;margin-top:4px;line-height:1.45}
+  /* doc cards */
+  .dcards{display:flex;gap:10px;flex-wrap:wrap}
+  .dc{background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--r-sm);padding:10px 13px;flex:1;min-width:130px}
+  .dn{font-size:12px;font-weight:600;color:var(--text)}.dd{font-size:11px;color:var(--text2);margin-top:4px;line-height:1.45}
+  /* note */
+  .note{border-left:3px solid var(--info-border);padding:10px 14px;font-size:12px;color:var(--text2);margin-top:16px;border-radius:0 var(--r-sm) var(--r-sm) 0;background:var(--bg2);line-height:1.6}
+  /* change flow */
+  .fc{max-width:460px;margin:0 auto}
+  .fs{border-radius:var(--r-sm);padding:12px 16px}
+  .fsn{font-size:13px;font-weight:600;letter-spacing:-.1px}.fsd{font-size:11px;margin-top:5px;line-height:1.5}
+  .fa{text-align:center;font-size:22px;color:var(--text3);margin:4px 0;line-height:1}
+  .fbr{display:flex;gap:12px}
+  .fbl{font-size:11px;font-weight:600;text-align:center;border-radius:10px;padding:4px 12px;margin-bottom:8px;font-family:'DM Mono',monospace}
+  .fi{background:var(--blue-bg);border:0.5px solid var(--blue-border)}.fi .fsn{color:var(--blue-med)}.fi .fsd{color:var(--blue-border)}
+  .famb{background:var(--amber-bg);border:0.5px solid var(--amber-border)}.famb .fsn{color:var(--amber-dark)}.famb .fsd{color:var(--amber-border)}
+  .fgrn{background:var(--green-bg);border:0.5px solid var(--green-border)}.fgrn .fsn{color:var(--green-dark)}.fgrn .fsd{color:var(--green-border)}
+  .fred{background:var(--coral-bg);border:0.5px solid var(--coral-border)}.fred .fsn{color:var(--coral-dark)}.fred .fsd{color:var(--coral-border)}
+  .fgy{background:var(--bg2);border:0.5px solid var(--border2)}.fgy .fsn{color:var(--text)}.fgy .fsd{color:var(--text2)}
+  .la{background:var(--green-mid);color:var(--green-dark)}.lr{background:var(--coral-mid);color:var(--coral-dark)}
+  /* process rows */
+  .pr{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+  .pnum{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;font-family:'DM Mono',monospace;flex-shrink:0;margin-top:8px}
+  .pb{flex:1;border-radius:var(--r-sm);padding:9px 13px}
+  .pt{font-size:13px;font-weight:600;letter-spacing:-.1px}.ps{font-size:11px;margin-top:4px;line-height:1.5}
+  .parr{font-size:16px;color:var(--text3);flex-shrink:0;margin-top:12px}
+  .po{flex:1;display:flex;flex-wrap:wrap;gap:6px;padding-top:7px;align-content:flex-start}
+  .pill{font-size:11px;border-radius:6px;padding:4px 10px;font-weight:500}
+  .sco .pnum{background:var(--teal-mid);color:var(--teal-dark)}
+  .sco .pb{background:var(--teal-bg);border:0.5px solid var(--teal-border)}.sco .pt{color:var(--teal-med)}.sco .ps{color:var(--teal-border)}
+  .sch .pnum{background:var(--coral-mid);color:var(--coral-dark)}
+  .sch .pb{background:var(--coral-bg);border:0.5px solid var(--coral-border)}.sch .pt{color:var(--coral-med)}.sch .ps{color:var(--coral-border)}
+  .cos .pnum{background:var(--amber-mid);color:var(--amber-dark)}
+  .cos .pb{background:var(--amber-bg);border:0.5px solid var(--amber-border)}.cos .pt{color:var(--amber-dark)}.cos .ps{color:var(--amber-border)}
+  .p1{background:var(--teal-mid);color:var(--teal-dark)}
+  .p2{background:var(--coral-mid);color:var(--coral-dark)}
+  .p3{background:var(--blue-mid);color:var(--blue-dark)}
+  .p4{background:var(--green-mid);color:var(--green-dark)}
+  .p5{background:var(--bg3);color:var(--text2);border:0.5px solid var(--border2)}
+  .p7{background:var(--amber-mid);color:var(--amber-dark)}
+  .p8{background:var(--amber-mid);color:var(--amber-dark)}
+  /* tables */
+  .tbl-wrap{overflow-x:auto;border-radius:var(--r-sm);border:0.5px solid var(--border2)}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  thead tr{background:var(--bg3)}
+  th{padding:9px 12px;text-align:left;font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.7px;text-transform:uppercase;font-family:'DM Mono',monospace;white-space:nowrap}
+  td{padding:9px 12px;border-top:0.5px solid var(--border);vertical-align:middle;line-height:1.5}
+  tr:not(.grp):hover td{background:var(--bg2)}
+  .grp td{background:var(--bg3);font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.7px;text-transform:uppercase;font-family:'DM Mono',monospace;padding:7px 12px;border-top:0.5px solid var(--border2)}
+  /* ev table cells */
+  .ev-term{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--amber-dark);white-space:nowrap}
+  .ev-name{color:var(--text2);font-size:12px}
+  .ev-f{font-family:'DM Mono',monospace;font-size:12px;background:var(--bg2);border-radius:4px;padding:3px 8px;white-space:nowrap;display:inline-block;color:var(--text);border:0.5px solid var(--border2)}
+  .ev-eg{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);white-space:nowrap}
+  .bg{background:var(--teal-bg);color:var(--teal-dark);border-radius:4px;padding:3px 8px;font-size:11px;font-weight:500;white-space:nowrap;display:inline-block;border:0.5px solid var(--teal-border)}
+  .bb{background:var(--coral-bg);color:var(--coral-dark);border-radius:4px;padding:3px 8px;font-size:11px;font-weight:500;white-space:nowrap;display:inline-block;border:0.5px solid var(--coral-border)}
+  .bn{background:var(--bg3);color:var(--text3);border-radius:4px;padding:3px 8px;font-size:11px;white-space:nowrap;display:inline-block}
+  /* estimate table */
+  .tname{font-weight:600;color:var(--text)}
+  .trange{font-family:'DM Mono',monospace;font-size:11px;color:var(--amber-dark);font-weight:500}
+  /* two col */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){
+    .two-col{grid-template-columns:1fr}
+    .pr{flex-wrap:wrap}.parr{display:none}.po{padding-top:0;margin-left:38px}
+    .shell{padding:20px 16px 48px}.header{padding:14px 16px}
+    .fbr{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-title">PMP Connections Map</span>
+  <span class="header-sub">documents · processes · equations · sequences</span>
+</div>
+
+<div class="shell">
+  <div class="tabs">
+    <button class="tab on" onclick="sw(this,'docs')">Document map</button>
+    <button class="tab" onclick="sw(this,'change')">Change control</button>
+    <button class="tab" onclick="sw(this,'scope')">Scope process</button>
+    <button class="tab" onclick="sw(this,'sched')">Schedule process</button>
+    <button class="tab" onclick="sw(this,'cost')">Cost &amp; Earned Value</button>
+  </div>
+
+  <!-- ── TAB 1: DOCUMENT MAP ── -->
+  <div id="d-docs" class="view on">
+    <div class="sec">
+      <div class="slbl">Master planning document</div>
+      <div class="cont pmp">
+        <div class="ctitle">Project Management Plan — contains all component plans</div>
+        <div class="crow">
+          <div class="cc"><div class="cn">Change Management Plan</div><div class="cd">How changes are requested, assessed &amp; approved</div></div>
+          <div class="cc"><div class="cn">Scope Management Plan</div><div class="cd">How scope is defined, validated &amp; controlled</div></div>
+          <div class="cc"><div class="cn">Requirements Mgmt Plan</div><div class="cd">How requirements are collected &amp; tracked</div></div>
+          <div class="cc"><div class="cn">Schedule Management Plan</div><div class="cd">How schedule accuracy &amp; model are set</div></div>
+          <div class="cc"><div class="cn">Cost Management Plan</div><div class="cd">Currency, accuracy level &amp; funding options</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="slbl">Scope baseline</div>
+      <div class="cont sba">
+        <div class="ctitle">Scope Baseline = all three documents together — the benchmark for every change</div>
+        <div class="crow">
+          <div class="cc"><div class="cn">Scope Statement</div><div class="cd">What the project will and will NOT do</div></div>
+          <div class="cc"><div class="cn">WBS</div><div class="cd">Work decomposed into packages</div></div>
+          <div class="cc"><div class="cn">WBS Dictionary</div><div class="cd">Per-package details: who, where, cost</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="slbl">Other key project documents</div>
+      <div class="dcards">
+        <div class="dc"><div class="dn">Project Charter</div><div class="dd">Formally authorizes the project to start</div></div>
+        <div class="dc"><div class="dn">Assumption Log</div><div class="dd">Stores all assumptions &amp; constraints</div></div>
+        <div class="dc"><div class="dn">Requirements Documentation</div><div class="dd">Detailed customer &amp; sponsor needs</div></div>
+        <div class="dc"><div class="dn">Change Log</div><div class="dd">Every change request &amp; its decision</div></div>
+        <div class="dc"><div class="dn">Issue Log</div><div class="dd">Active problems needing resolution</div></div>
+        <div class="dc"><div class="dn">Lessons Learned Register</div><div class="dd">New knowledge captured mid-project</div></div>
+      </div>
+    </div>
+    <div class="note">The Project Management Plan is the container — its component plans each govern one aspect of the project. The Scope Baseline is the reference: work added outside the CCB is scope creep. The Cost Baseline (activity costs + contingency reserves) sits inside the overall project budget.</div>
+  </div>
+
+  <!-- ── TAB 2: CHANGE CONTROL ── -->
+  <div id="d-change" class="view">
+    <div class="fc">
+      <div class="fs fgy"><div class="fsn">Change request received</div><div class="fsd">From a stakeholder, sponsor, or team member</div></div>
+      <div class="fa">↓</div>
+      <div class="fs fi"><div class="fsn">Review &amp; assess impact on the project</div><div class="fsd">Always the first step — understand impact on scope, time, cost &amp; risk before any action</div></div>
+      <div class="fa">↓</div>
+      <div class="fs fi"><div class="fsn">Submit to the Change Control Board (CCB)</div><div class="fsd">Only the CCB can officially approve or reject changes</div></div>
+      <div class="fa">↓</div>
+      <div class="fs famb"><div class="fsn">CCB decision</div><div class="fsd">Approved or rejected?</div></div>
+      <div class="fa">↓</div>
+      <div class="fbr">
+        <div style="flex:1"><div class="fbl la">Approved</div><div class="fs fgrn"><div class="fsn">Execute in Direct &amp; Manage Project Work</div><div class="fsd">Only this process executes approved changes — not Monitor &amp; Control or Validate Scope</div></div></div>
+        <div style="flex:1"><div class="fbl lr">Rejected</div><div class="fs fred"><div class="fsn">Notify the requesting stakeholder</div><div class="fsd">Inform them the request was not approved by the CCB</div></div></div>
+      </div>
+      <div class="fa">↓</div>
+      <div class="fs fgy"><div class="fsn">Update the Change Log</div><div class="fsd">Record every decision — both approvals and rejections</div></div>
+    </div>
+    <div class="note">Exam tip: the first action is always to review &amp; assess — never stop work, never execute before understanding the impact. When a deliverable is accepted by the sponsor → move to Close Project or Phase. If the deliverable is NOT accepted yet → the project cannot close.</div>
+  </div>
+
+  <!-- ── TAB 3: SCOPE PROCESS ── -->
+  <div id="d-scope" class="view">
+    <div class="pr sco"><div class="pnum">1</div><div class="pb"><div class="pt">Plan Scope Management</div><div class="ps">How will scope be defined, tracked &amp; controlled?</div></div><div class="parr">→</div><div class="po"><span class="pill p1">Scope Management Plan</span><span class="pill p1">Requirements Mgmt Plan</span></div></div>
+    <div class="pr sco"><div class="pnum">2</div><div class="pb"><div class="pt">Collect Requirements</div><div class="ps">Tools: Prototype, Affinity Diagram, Data Gathering</div></div><div class="parr">→</div><div class="po"><span class="pill p1">Requirements Documentation</span></div></div>
+    <div class="pr sco"><div class="pnum">3</div><div class="pb"><div class="pt">Define Scope</div><div class="ps">Describes what the project will and will NOT do</div></div><div class="parr">→</div><div class="po"><span class="pill p1">Scope Statement</span></div></div>
+    <div class="pr sco"><div class="pnum">4</div><div class="pb"><div class="pt">Create WBS</div><div class="ps">Decompose deliverables into work packages</div></div><div class="parr">→</div><div class="po"><span class="pill p3">Scope Baseline</span><span class="pill p3">WBS + WBS Dictionary</span></div></div>
+    <div class="pr sco"><div class="pnum">5</div><div class="pb"><div class="pt">Validate Scope</div><div class="ps">Sponsor formally accepts the completed deliverable</div></div><div class="parr">→</div><div class="po"><span class="pill p4">Accepted Deliverables</span></div></div>
+    <div class="pr sco"><div class="pnum">6</div><div class="pb"><div class="pt">Control Scope</div><div class="ps">Catch scope creep; work not in WBS needs CCB approval</div></div><div class="parr">→</div><div class="po"><span class="pill p5">Change Requests</span><span class="pill p5">Baseline Updates</span></div></div>
+    <div class="note">Scope Baseline (step 4) = Scope Statement + WBS + WBS Dictionary — all three are required. Validate Scope = formal acceptance. Control Scope = preventing unauthorized additions. If the deliverable is not yet accepted, the project cannot be closed.</div>
+  </div>
+
+  <!-- ── TAB 4: SCHEDULE PROCESS ── -->
+  <div id="d-sched" class="view">
+    <div class="pr sch"><div class="pnum">1</div><div class="pb"><div class="pt">Plan Schedule Management</div><div class="ps">Sets accuracy, model &amp; units of measure. Tool: Data Analysis</div></div><div class="parr">→</div><div class="po"><span class="pill p2">Schedule Management Plan</span></div></div>
+    <div class="pr sch"><div class="pnum">2</div><div class="pb"><div class="pt">Define Activities</div><div class="ps">Uses OPA (lessons learned). Tool: Rolling Wave Planning</div></div><div class="parr">→</div><div class="po"><span class="pill p2">Activity List</span><span class="pill p2">Activity Attributes</span></div></div>
+    <div class="pr sch"><div class="pnum">3</div><div class="pb"><div class="pt">Sequence Activities</div><div class="ps">Method: PDM. Define Mandatory Dependencies, apply Leads &amp; Lags</div></div><div class="parr">→</div><div class="po"><span class="pill p2">Network Diagram</span><span class="pill p7">Leads &amp; Lags</span></div></div>
+    <div class="pr sch"><div class="pnum">4</div><div class="pb"><div class="pt">Estimate Durations</div><div class="ps">Analogous Estimating: uses past similar project data</div></div><div class="parr">→</div><div class="po"><span class="pill p2">Basis of Estimates</span></div></div>
+    <div class="pr sch"><div class="pnum">5</div><div class="pb"><div class="pt">Develop Schedule</div><div class="ps">Critical Path Method → compress via Fast Tracking</div></div><div class="parr">→</div><div class="po"><span class="pill p2">Schedule Baseline</span><span class="pill p3">Project Calendars</span></div></div>
+    <div class="pr sch"><div class="pnum">6</div><div class="pb"><div class="pt">Control Schedule</div><div class="ps">Agile tool: Iteration Burndown Chart</div></div><div class="parr">→</div><div class="po"><span class="pill p5">Trend Analysis</span><span class="pill p5">Schedule Forecasts</span></div></div>
+    <div class="note">Critical Path = longest path = minimum project duration. Fast Tracking = parallel work (saves time, adds risk, no extra cost). Lag = delay between activities. Lead = overlap between activities. Rolling Wave = plan in detail as work gets closer.</div>
+  </div>
+
+  <!-- ── TAB 5: COST & EARNED VALUE ── -->
+  <div id="d-cost" class="view">
+
+    <div class="sec">
+      <div class="slbl">Cost management process</div>
+      <div class="pr cos"><div class="pnum">1</div><div class="pb"><div class="pt">Plan Cost Management</div><div class="ps">Reviews funding options (Data Analysis). Sets currency, accuracy &amp; units of measurement</div></div><div class="parr">→</div><div class="po"><span class="pill p8">Cost Management Plan</span></div></div>
+      <div class="pr cos"><div class="pnum">2</div><div class="pb"><div class="pt">Estimate Costs</div><div class="ps">Bottom-up (most precise), Parametric ($/unit), Analogous (historical), ROM (quick &amp; rough)</div></div><div class="parr">→</div><div class="po"><span class="pill p8">Cost Estimates</span><span class="pill p8">Basis of Estimates</span></div></div>
+      <div class="pr cos"><div class="pnum">3</div><div class="pb"><div class="pt">Determine Budget</div><div class="ps">Tool: Cost Aggregation — sum work packages → cost baseline → project budget</div></div><div class="parr">→</div><div class="po"><span class="pill p8">Cost Baseline</span><span class="pill p5">Project Budget</span></div></div>
+      <div class="pr cos"><div class="pnum">4</div><div class="pb"><div class="pt">Control Costs</div><div class="ps">Earned Value Management (EVM). Compares planned vs actual performance</div></div><div class="parr">→</div><div class="po"><span class="pill p4">Work Performance Info</span><span class="pill p5">Forecasts (EAC)</span></div></div>
+    </div>
+
+    <div class="sec two-col">
+      <!-- Budget structure -->
+      <div>
+        <div class="slbl">Budget structure — what's inside what</div>
+        <div class="budg-out">
+          <div class="ctitle">Project Budget — total funds authorised</div>
+          <div class="budg-in">
+            <div class="ctitle">Cost Baseline — used to measure performance (S-curve)</div>
+            <div class="crow">
+              <div class="cc"><div class="cn">Activity Cost Estimates</div><div class="cd">Sum of all work package costs (Cost Aggregation)</div></div>
+              <div class="cc"><div class="cn">Contingency Reserves</div><div class="cd">Known unknowns — included in baseline</div></div>
+            </div>
+          </div>
+          <div class="budg-mgmt">
+            <div class="cn">Management Reserves</div>
+            <div class="cd">Unknown unknowns — held by sponsor — NOT in cost baseline. Added on top to form the total project budget.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estimate types -->
+      <div>
+        <div class="slbl">Estimate types &amp; accuracy ranges</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Type</th><th>Accuracy</th><th>When used</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tname">ROM</span></td><td><span class="trange">−25% to +75%</span></td><td>Initiating — quick &amp; rough</td></tr>
+              <tr><td><span class="tname">Budget</span></td><td><span class="trange">−10% to +25%</span></td><td>Early planning</td></tr>
+              <tr><td><span class="tname">Definitive</span></td><td><span class="trange">−5% to +10%</span></td><td>Late planning — high confidence</td></tr>
+              <tr><td><span class="tname">Bottom-up</span></td><td><span class="trange">Most precise</span></td><td>Detailed planning — work package level</td></tr>
+              <tr><td><span class="tname">Parametric</span></td><td><span class="trange">Varies</span></td><td>Any phase — uses $/unit formula</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- EV Formula Table -->
+    <div class="sec">
+      <div class="slbl">Earned value formulas — equation · calculation · interpretation</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Term</th>
+              <th>Full name</th>
+              <th>Formula</th>
+              <th>Worked example</th>
+              <th>Positive / &gt;1 means</th>
+              <th>Negative / &lt;1 means</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="grp"><td colspan="6">Base values — the four inputs every EV formula needs</td></tr>
+            <tr>
+              <td><span class="ev-term">BAC</span></td>
+              <td class="ev-name">Budget at Completion</td>
+              <td><span class="ev-f">= total planned budget</span></td>
+              <td class="ev-eg">$90,000</td>
+              <td colspan="2"><span class="bn">The finish line — fixed at planning</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">PV</span></td>
+              <td class="ev-name">Planned Value</td>
+              <td><span class="ev-f">= budgeted cost of work scheduled</span></td>
+              <td class="ev-eg">$16,000</td>
+              <td colspan="2"><span class="bn">What you planned to spend by now</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">EV</span></td>
+              <td class="ev-name">Earned Value</td>
+              <td><span class="ev-f">= BAC × % complete</span></td>
+              <td class="ev-eg">$14,000</td>
+              <td colspan="2"><span class="bn">Dollar value of work actually completed</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">AC</span></td>
+              <td class="ev-name">Actual Cost</td>
+              <td><span class="ev-f">= amount actually spent</span></td>
+              <td class="ev-eg">$30,000</td>
+              <td colspan="2"><span class="bn">What you have actually spent so far</span></td>
+            </tr>
+
+            <tr class="grp"><td colspan="6">Variance formulas — positive result is good</td></tr>
+            <tr>
+              <td><span class="ev-term">CV</span></td>
+              <td class="ev-name">Cost Variance</td>
+              <td><span class="ev-f">EV − AC</span></td>
+              <td class="ev-eg">32k − 30k = +$2,000</td>
+              <td><span class="bg">+ Under budget</span></td>
+              <td><span class="bb">− Over budget</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">SV</span></td>
+              <td class="ev-name">Schedule Variance</td>
+              <td><span class="ev-f">EV − PV</span></td>
+              <td class="ev-eg">14k − 16k = −$2,000</td>
+              <td><span class="bg">+ Ahead of schedule</span></td>
+              <td><span class="bb">− Behind schedule</span></td>
+            </tr>
+
+            <tr class="grp"><td colspan="6">Performance indices — greater than 1 is good</td></tr>
+            <tr>
+              <td><span class="ev-term">CPI</span></td>
+              <td class="ev-name">Cost Performance Index</td>
+              <td><span class="ev-f">EV ÷ AC</span></td>
+              <td class="ev-eg">32k ÷ 30k = 1.07<br><span style="color:var(--coral-dark)">0.9 CPI = 10% over budget</span></td>
+              <td><span class="bg">&gt;1 Under budget</span></td>
+              <td><span class="bb">&lt;1 Over budget</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">SPI</span></td>
+              <td class="ev-name">Schedule Performance Index</td>
+              <td><span class="ev-f">EV ÷ PV</span></td>
+              <td class="ev-eg">14k ÷ 16k = 0.875</td>
+              <td><span class="bg">&gt;1 Ahead of schedule</span></td>
+              <td><span class="bb">&lt;1 Behind schedule</span></td>
+            </tr>
+
+            <tr class="grp"><td colspan="6">Forecast formulas — predicting the final cost</td></tr>
+            <tr>
+              <td><span class="ev-term">EAC</span></td>
+              <td class="ev-name">Estimate at Completion</td>
+              <td><span class="ev-f">BAC ÷ CPI</span></td>
+              <td class="ev-eg">90k ÷ 1.06 = $84,906</td>
+              <td colspan="2"><span class="bn">Forecast total project cost at finish</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">ETC</span></td>
+              <td class="ev-name">Estimate to Complete</td>
+              <td><span class="ev-f">EAC − AC</span></td>
+              <td class="ev-eg">84,906 − 30k = $54,906</td>
+              <td colspan="2"><span class="bn">Remaining cost needed to finish</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">VAC</span></td>
+              <td class="ev-name">Variance at Completion</td>
+              <td><span class="ev-f">BAC − EAC</span></td>
+              <td class="ev-eg">90k − 84,906 = +$5,094</td>
+              <td><span class="bg">+ Will finish under budget</span></td>
+              <td><span class="bb">− Will finish over budget</span></td>
+            </tr>
+            <tr>
+              <td><span class="ev-term">TCPI</span></td>
+              <td class="ev-name">To Complete Performance Index</td>
+              <td><span class="ev-f">(BAC − EV) ÷ (BAC − AC)</span></td>
+              <td class="ev-eg">(90k−32k) ÷ (90k−30k)<br>= 58k ÷ 60k = 0.97</td>
+              <td><span class="bg">&lt;1 Achievable — easier than current pace</span></td>
+              <td><span class="bb">&gt;1 Must improve efficiency to hit BAC</span></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="note">
+      Reading CPI: a CPI of 0.9 means for every $1 spent, only $0.90 of work is delivered — the project is 10% over budget. EAC = BAC ÷ CPI is the standard exam formula (divide total budget by current efficiency). Management Reserves are for unknown unknowns and are NOT in the cost baseline — only the project budget includes them. The cost baseline displayed as an S-curve graph is a time-phased view of planned spending.
+    </div>
+
+  </div><!-- /d-cost -->
+
+</div><!-- /shell -->
+
+<script>
+  var views = ['docs','change','scope','sched','cost'];
+  views.forEach(function(v) {
+    var el = document.getElementById('d-' + v);
+    if (el && v !== 'docs') el.style.display = 'none';
+  });
+  function sw(btn, id) {
+    views.forEach(function(v) {
+      var e = document.getElementById('d-' + v);
+      if (e) e.style.display = 'none';
+    });
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+    var target = document.getElementById('d-' + id);
+    if (target) target.style.display = 'block';
+    btn.classList.add('on');
+  }
+</script>
+
+</body>
+</html>
