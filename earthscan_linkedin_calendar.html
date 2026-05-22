@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EarthScan — LinkedIn Posting Calendar · May–June 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --es-orange: #f24e29;
+    --es-orange-light: #fef0ea;
+    --es-orange-mid: #f7c4a8;
+    --bg: #f8f7f4;
+    --surface: #ffffff;
+    --surface-2: #f1efe8;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.14);
+    --text-primary: #1a1917;
+    --text-secondary: #6b6962;
+    --text-tertiary: #9e9b94;
+    --purple: #7f77dd; --purple-light: #f3eefe; --purple-dark: #3c3489; --purple-border: #afa9ec;
+    --blue: #378add; --blue-light: #e6f1fb; --blue-dark: #0c447c; --blue-border: #b5d4f4;
+    --green: #639922; --green-light: #eaf3de; --green-dark: #3b6d11; --green-border: #c0dd97;
+    --amber: #ba7517; --amber-light: #faeeda; --amber-dark: #633806; --amber-border: #fac775;
+    --coral: #d85a30; --coral-light: #fef0ea; --coral-dark: #b03a1a; --coral-border: #f7c4a8;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--text-primary);
+    padding: 2.5rem 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -60px; top: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: var(--es-orange);
+    opacity: .12;
+  }
+  .header-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+  .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--es-orange); }
+  .logo-text { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.5); letter-spacing: .08em; text-transform: uppercase; }
+  .header h1 { font-size: 32px; font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: .5rem; }
+  .header h1 span { color: var(--es-orange); }
+  .header-sub { font-size: 14px; color: rgba(255,255,255,.5); }
+  .header-meta { display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+  .meta-item { }
+  .meta-n { font-size: 26px; font-weight: 600; color: #fff; line-height: 1; }
+  .meta-l { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 3px; font-family: 'DM Mono', monospace; }
+  .meta-div { width: 1px; background: rgba(255,255,255,.1); }
+
+  /* ── Legend ── */
+  .legend-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: .9rem 3rem;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .legend-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+  .legend-label { font-size: 11px; font-weight: 500; color: var(--text-tertiary); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; margin-right: .25rem; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: opacity .15s, transform .1s; user-select: none; }
+  .chip:hover { transform: translateY(-1px); }
+  .chip.off { opacity: .3; }
+  .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .chip-ext  { background: var(--purple-light); color: var(--purple-dark); border-color: var(--purple-border); }
+  .chip-ext  .chip-dot { background: var(--purple); }
+  .chip-es   { background: var(--blue-light);   color: var(--blue-dark);   border-color: var(--blue-border);   }
+  .chip-es   .chip-dot { background: var(--blue); }
+  .chip-prod { background: var(--coral-light);  color: var(--coral-dark);  border-color: var(--coral-border);  }
+  .chip-prod .chip-dot { background: var(--coral); }
+  .chip-tl   { background: var(--green-light);  color: var(--green-dark);  border-color: var(--green-border);  }
+  .chip-tl   .chip-dot { background: var(--green); }
+  .chip-cult { background: var(--amber-light);  color: var(--amber-dark);  border-color: var(--amber-border);  }
+  .chip-cult .chip-dot { background: var(--amber); }
+
+  /* ── Main ── */
+  .main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 3rem 4rem; }
+
+  /* ── Week block ── */
+  .week-block { margin-bottom: 3rem; }
+  .week-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.25rem; }
+  .week-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-tertiary);
+    background: var(--surface-2); border-radius: 4px;
+    padding: 4px 8px; white-space: nowrap;
+  }
+  .week-desc { font-size: 13px; color: var(--text-secondary); }
+
+  .week-grid { display: grid; gap: 14px; }
+  .week-grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .week-grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem 1.1rem 1rem;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: box-shadow .15s, transform .15s, border-color .15s;
+  }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); transform: translateY(-2px); }
+  .card.ext { border-color: var(--purple-border); border-width: 1.5px; }
+  .card.hidden { display: none; }
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .card-date { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-tertiary); font-weight: 500; }
+  .card-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600; padding: 2px 8px;
+    border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+    letter-spacing: .03em; text-transform: uppercase;
+  }
+  .badge-ext  { background: var(--purple-light); color: var(--purple-dark); }
+  .badge-es   { background: var(--blue-light);   color: var(--blue-dark);   }
+  .badge-prod { background: var(--coral-light);  color: var(--coral-dark);  }
+  .badge-tl   { background: var(--green-light);  color: var(--green-dark);  }
+  .badge-cult { background: var(--amber-light);  color: var(--amber-dark);  }
+
+  .card-pillar {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500; padding: 3px 9px;
+    border-radius: 20px; width: fit-content;
+  }
+  .pillar-ext  { background: var(--purple-light); color: var(--purple-dark); }
+  .pillar-es   { background: var(--blue-light);   color: var(--blue-dark);   }
+  .pillar-prod { background: var(--coral-light);  color: var(--coral-dark);  }
+  .pillar-tl   { background: var(--green-light);  color: var(--green-dark);  }
+  .pillar-cult { background: var(--amber-light);  color: var(--amber-dark);  }
+  .pillar-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .7; flex-shrink: 0; }
+
+  .card-headline { font-size: 13px; font-weight: 600; line-height: 1.5; color: var(--text-primary); }
+  .card-authors { font-size: 11px; color: var(--text-tertiary); font-style: italic; line-height: 1.4; }
+  .card-caption {
+    font-size: 12px; color: var(--text-secondary); line-height: 1.65;
+    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--blue); text-decoration: none;
+    font-weight: 500;
+  }
+  .card-link:hover { text-decoration: underline; }
+  .card-link svg { flex-shrink: 0; }
+
+  .card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    font-size: 11px; color: var(--blue-dark); background: var(--blue-light);
+    padding: 2px 7px; border-radius: 4px; font-weight: 500;
+  }
+
+  .copy-btn {
+    display: flex; align-items: center; gap: 6px;
+    width: 100%; padding: 7px 10px; font-size: 12px; font-weight: 500;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-secondary);
+    cursor: pointer; transition: all .15s; margin-top: 2px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .copy-btn:hover { background: #ebe9e2; color: var(--text-primary); border-color: var(--border-strong); }
+  .copy-btn.ok { color: #3b6d11; background: var(--green-light); border-color: var(--green-border); }
+  .copy-btn svg { flex-shrink: 0; }
+
+  /* ── Footer ── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 3rem;
+    background: var(--surface);
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .footer-left { font-size: 12px; color: var(--text-tertiary); }
+  .footer-left strong { color: var(--text-secondary); }
+  .footer-right { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-tertiary); }
+
+  @media (max-width: 900px) {
+    .header { padding: 2rem 1.5rem 1.5rem; }
+    .legend-bar { padding: .75rem 1.5rem; }
+    .main { padding: 1.5rem 1.5rem 3rem; }
+    .week-grid-3, .week-grid-4 { grid-template-columns: 1fr 1fr; }
+    .footer { padding: 1.25rem 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    .header h1 { font-size: 24px; }
+    .week-grid-3, .week-grid-4 { grid-template-columns: 1fr; }
+    .meta-div { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-row">
+      <span class="logo-dot"></span>
+      <span class="logo-text">EarthScan · LinkedIn Content Calendar</span>
+    </div>
+    <h1>Posting Calendar<br><span>May 22 – June 20, 2026</span></h1>
+    <p class="header-sub">AI/ML &amp; HPC in Geoscience · 3–4 posts per week · Mon · Wed · Fri</p>
+    <div class="header-meta">
+      <div class="meta-item"><div class="meta-n">13</div><div class="meta-l">Total posts</div></div>
+      <div class="meta-div"></div>
+      <div class="meta-item"><div class="meta-n">8</div><div class="meta-l">External papers</div></div>
+      <div class="meta-div"></div>
+      <div class="meta-item"><div class="meta-n">5</div><div class="meta-l">EarthScan posts</div></div>
+      <div class="meta-div"></div>
+      <div class="meta-item"><div class="meta-n">4</div><div class="meta-l">Weeks covered</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- LEGEND / FILTER BAR -->
+<div class="legend-bar">
+  <div class="legend-inner">
+    <span class="legend-label">Filter</span>
+    <div class="chip chip-ext"  data-key="ext"  onclick="toggle('ext',this)"> <span class="chip-dot"></span>External research</div>
+    <div class="chip chip-es"   data-key="es"   onclick="toggle('es',this)">  <span class="chip-dot"></span>EarthScan publication</div>
+    <div class="chip chip-prod" data-key="prod" onclick="toggle('prod',this)"><span class="chip-dot"></span>Product</div>
+    <div class="chip chip-tl"   data-key="tl"   onclick="toggle('tl',this)">  <span class="chip-dot"></span>Thought leadership</div>
+    <div class="chip chip-cult" data-key="cult" onclick="toggle('cult',this)"><span class="chip-dot"></span>Team &amp; culture</div>
+  </div>
+</div>
+
+<!-- MAIN CALENDAR -->
+<main class="main" id="main">
+
+  <!-- WEEK 1 -->
+  <section class="week-block">
+    <div class="week-header">
+      <span class="week-badge">Week 1 · May 22–30</span>
+      <span class="week-desc">Start strong — today's EarthScan blog + 3 fresh external papers</span>
+    </div>
+    <div class="week-grid week-grid-4" id="week1"></div>
+  </section>
+
+  <!-- WEEK 2 -->
+  <section class="week-block">
+    <div class="week-header">
+      <span class="week-badge">Week 2 · June 2–6</span>
+      <span class="week-desc">GeoBFDT research note + 2 external benchmarks</span>
+    </div>
+    <div class="week-grid week-grid-3" id="week2"></div>
+  </section>
+
+  <!-- WEEK 3 -->
+  <section class="week-block">
+    <div class="week-header">
+      <span class="week-badge">Week 3 · June 9–13</span>
+      <span class="week-desc">Thought leadership + physics foundation models + HPC review</span>
+    </div>
+    <div class="week-grid week-grid-3" id="week3"></div>
+  </section>
+
+  <!-- WEEK 4 -->
+  <section class="week-block">
+    <div class="week-header">
+      <span class="week-badge">Week 4 · June 16–20</span>
+      <span class="week-desc">Product spotlight + WLFM well-log foundation model + hiring</span>
+    </div>
+    <div class="week-grid week-grid-3" id="week4"></div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      Generated for <strong>EarthScan.io</strong> · Part of the DeepKapha group ·
+      <a href="https://www.earthscan.io" target="_blank" style="color:var(--es-orange);text-decoration:none">earthscan.io</a>
+    </div>
+    <div class="footer-right">May 22, 2026</div>
+  </div>
+</footer>
+
+<script>
+const PILLAR = {
+  ext:  { label: 'External research',      cls: 'ext',  badge: 'badge-ext',  pillarCls: 'pillar-ext',  badgeText: 'External'   },
+  es:   { label: 'EarthScan publication',  cls: 'es',   badge: 'badge-es',   pillarCls: 'pillar-es',   badgeText: 'EarthScan'  },
+  prod: { label: 'Product',                cls: 'prod', badge: 'badge-prod', pillarCls: 'pillar-prod', badgeText: 'Product'    },
+  tl:   { label: 'Thought leadership',     cls: 'tl',   badge: 'badge-tl',   pillarCls: 'pillar-tl',   badgeText: 'Thought leadership' },
+  cult: { label: 'Team & culture',         cls: 'cult', badge: 'badge-cult', pillarCls: 'pillar-cult', badgeText: 'Team & culture' }
+};
+
+const POSTS = [
+  { week: 1, date: 'Fri 22 May', pillar: 'es', type: 'Blog post',
+    headline: 'Seismic foundation models: the CDO\'s new edge — published today',
+    authors: 'EarthScan',
+    caption: 'Operators spend $2.4B/year on subsurface studies that take weeks. Seismic foundation models compress that to hours — and shift who owns the insight cycle.\n\nOur latest piece explores what this means for Chief Data Officers in 2026. Link in comments 👇',
+    url: 'https://www.earthscan.io/insights/seismic-foundation-model-cdo-decision',
+    tags: ['#SeismicAI','#CDO','#FoundationModels','#OilAndGas'] },
+
+  { week: 1, date: 'Mon 26 May', pillar: 'ext', type: 'Research spotlight',
+    headline: 'NCS-Model: open-source seismic foundation model from Equinor & Aker BP',
+    authors: 'Ordoñez et al. — Norwegian Computing Center / Equinor / Aker BP · arXiv Mar 2026',
+    caption: 'The Norwegian Computing Center, Equinor and Aker BP just released the NCS-models — seismic foundation models pretrained on the entire public DISKOS database from the Norwegian Continental Shelf. Weights are open-sourced.\n\nThis is significant: most existing seismic foundation models rely on limited or proprietary data. Pretraining at basin scale changes what\'s possible for transfer to downstream interpretation tasks.\n\nWhat does this mean for exploration teams building their own workflows? 👇',
+    url: 'https://arxiv.org/abs/2603.23211',
+    tags: ['#SeismicAI','#FoundationModels','#OpenSource','#NorwegianContinentalShelf','#Equinor'] },
+
+  { week: 1, date: 'Wed 28 May', pillar: 'ext', type: 'Research spotlight',
+    headline: 'SWAN dataset + diffusion model achieves SOTA on seismic missing-trace reconstruction',
+    authors: 'Gong, Fomel, Chen — UT Austin · arXiv Mar 2026',
+    caption: 'A new benchmark dataset — SWAN (Seismic Waveforms for Automatic Neural-network processing) — aggregates synthetic and real waveforms across diverse geological structures, noise conditions, and acquisition geometries.\n\nPaired with a conditionally constrained residual diffusion model, it outperforms all deep-learning and physics-based baselines on missing-trace reconstruction.\n\nGeneralizable diffusion models for seismic data are no longer theoretical. Full paper linked.',
+    url: 'https://arxiv.org/abs/2603.13645',
+    tags: ['#DiffusionModels','#SeismicProcessing','#SWAN','#Geophysics','#DeepLearning'] },
+
+  { week: 1, date: 'Fri 30 May', pillar: 'ext', type: 'Research spotlight',
+    headline: 'Comprehensive review: LLMs and foundation models in upstream oil & gas, 2003–2026',
+    authors: 'Preprints.org · April 2026',
+    caption: 'A sweeping review of large language model deployment in petroleum and adjacent geoscience — covering sovereign LLMs, vision-language models for seismic and core photos, RAG pipelines, and agentic tool-use in reservoir workflows.\n\nThe 2024–2026 window is identified as the inflection point where CS-to-petroleum latency compressed from years to months.\n\nRequired reading if you\'re thinking seriously about where AI sits in the upstream stack.',
+    url: 'https://www.preprints.org/frontend/manuscript/c1d58a36fed8595120f499514c547eb7/download_pub',
+    tags: ['#PetroleumAI','#LLM','#FoundationModels','#UpstreamOil','#AIStrategy'] },
+
+  { week: 2, date: 'Mon 2 Jun', pillar: 'es', type: 'Research note',
+    headline: 'GeoBFDT: our transformer for automated fracture & bedding detection — no mask supervision',
+    authors: 'EarthScan',
+    caption: 'We trained a DETR-style transformer on FMI and CMI logs from 14 Omani wells. GeoBFDT detects fractures and bedding planes end-to-end — predicting depth, dip, and azimuth without any mask supervision.\n\nThis is what automated borehole image interpretation looks like at scale. Research note linked.',
+    url: 'https://www.earthscan.io/insights/geobfdt-transformer-fracture-bedding-detection-image-logs',
+    tags: ['#GeoBFDT','#BoreholeLogs','#FMI','#DeepLearning','#Geoscience'] },
+
+  { week: 2, date: 'Wed 4 Jun', pillar: 'ext', type: 'Research spotlight',
+    headline: 'FormationEval: 72 LLMs benchmarked on petroleum geoscience — top models hit 97%+',
+    authors: 'Ermilov · arXiv Jan–Feb 2026',
+    caption: 'FormationEval is a new open benchmark: 505 multiple-choice questions across petrophysics, petroleum geology, and reservoir engineering, evaluated across 72 models from OpenAI, Anthropic, Google, Meta, and open-weight alternatives.\n\nTop performers exceed 97% accuracy (Gemini 3 Pro Preview reaches 99.8%). The gap between open-weight and closed models is narrower than expected.\n\nFor teams building or evaluating geoscience AI systems, this is the benchmark to know.',
+    url: 'https://arxiv.org/abs/2601.02158',
+    tags: ['#FormationEval','#PetroleumAI','#LLMBenchmark','#GeoscienceAI','#OpenSource'] },
+
+  { week: 2, date: 'Fri 6 Jun', pillar: 'ext', type: 'Research spotlight',
+    headline: 'GeoSIRR: describe a geological cross-section in plain language and watch it render',
+    authors: 'King Fahd University of Petroleum & Minerals · EGUSphere preprint Mar 2026',
+    caption: 'GeoSIRR 1.0 uses LLMs to translate free-form geological narratives into structured, coordinate-based subsurface cross-sections. A geoscientist describes a formation in natural language and iteratively refines the result.\n\nThis is the conversational interface that exploration workflows have been waiting for. The gap between qualitative expert insight and quantitative modelling is starting to close.',
+    url: 'https://egusphere.copernicus.org/preprints/2026/egusphere-2025-6545/',
+    tags: ['#GeoSIRR','#LLM','#GeologicalModeling','#ConversationalAI','#Geoscience'] },
+
+  { week: 3, date: 'Mon 9 Jun', pillar: 'tl', type: 'Blog recap',
+    headline: 'Oil & gas stopped buying AI off the shelf. Now they\'re building it.',
+    authors: 'EarthScan',
+    caption: 'Sovereign LLMs trained on decades of subsurface data. Agentic stacks replacing upstream workflows. Modular data centers next to refineries.\n\nIn 2026, the industry\'s relationship with AI fundamentally changed. We broke down what\'s driving this shift — and what it means for the next decade of exploration.',
+    url: 'https://www.earthscan.io/insights/oil-and-gas-as-ai-builder-2026',
+    tags: ['#AIStrategy','#UpstreamOil','#SovereignAI','#EnergyIndustry'] },
+
+  { week: 3, date: 'Wed 11 Jun', pillar: 'ext', type: 'Research spotlight',
+    headline: 'GPhyT: a physics foundation model trained on 1.8 TB of simulation data',
+    authors: 'Wiesner et al. · arXiv Sep 2025 / updated Jan 2026',
+    caption: 'The General Physics Transformer (GPhyT) is trained on 1.8 TB of diverse simulation data — fluid-solid interactions, shock waves, thermal convection, and multi-phase dynamics — without being told the underlying equations.\n\nA single model learns to infer governing dynamics from context. The implications for physics-informed subsurface modelling are significant: reservoir simulation as inference rather than brute-force computation.',
+    url: 'https://arxiv.org/abs/2509.13805',
+    tags: ['#PhysicsAI','#FoundationModels','#ReservoirSimulation','#PIML','#Geophysics'] },
+
+  { week: 3, date: 'Fri 13 Jun', pillar: 'ext', type: 'Research spotlight',
+    headline: 'HPC + ML for geoscience: a systematic review of 289 studies, 1996–2024',
+    authors: 'Taylor & Francis · Published Mar 2026',
+    caption: 'A peer-reviewed systematic review of how high-performance computing and machine learning have converged in geospatial science — covering supercomputing, parallel computing, cloud GPU, and fog computing across 289 indexed studies.\n\nKey finding: since 2015, HPC+ML geoscience research has grown exponentially. The infrastructure shift is moving toward hybrid cloud/HPC architectures with containerized, reproducible workflows.\n\nThe production stack for subsurface AI is being standardised in real time.',
+    url: 'https://www.tandfonline.com/doi/full/10.1080/19475683.2026.2639769',
+    tags: ['#HPC','#CloudComputing','#GeoscienceAI','#MLOps','#SubsurfaceAI'] },
+
+  { week: 4, date: 'Mon 16 Jun', pillar: 'prod', type: 'Carousel',
+    headline: 'ES Raster Digitizer: from scanned paper log to ML-ready curve in minutes',
+    authors: 'EarthScan',
+    caption: 'Decades of well log data locked in raster images. The ES Raster Digitizer converts scanned logs into clean, structured digital curves — no manual picking, no guesswork.\n\nGeoscientists get back hours every week. Decision-makers get data they can actually use.',
+    url: 'https://www.earthscan.io/es-raster-digitizer',
+    tags: ['#ESRasterDigitizer','#WellLogs','#Digitization','#SubsurfaceAI'] },
+
+  { week: 4, date: 'Wed 18 Jun', pillar: 'ext', type: 'Research spotlight',
+    headline: 'WLFM: a well-logs foundation model that learns a reusable geological vocabulary',
+    authors: 'Qi et al. · arXiv Sep 2025',
+    caption: 'WLFM is a foundation model for well-log interpretation — trained for multi-task and cross-well geological interpretation. It achieves 0.0041 MSE in porosity estimation and 74.13% accuracy in lithology classification, with fine-tuning pushing both further.\n\nBeyond accuracy: WLFM develops emergent layer-awareness and learns a reusable geological vocabulary that transfers across wells and formations.\n\nThis is the direction the entire well-log AI space is moving. Full paper on arXiv.',
+    url: 'https://arxiv.org/abs/2509.18152',
+    tags: ['#WLFM','#WellLogs','#FoundationModels','#LithologyAI','#Geoscience'] },
+
+  { week: 4, date: 'Fri 20 Jun', pillar: 'cult', type: 'Text post',
+    headline: 'We\'re growing the team — AI engineers who want to work on real subsurface data',
+    authors: 'EarthScan',
+    caption: 'Working on AI at EarthScan means your models run on some of the most complex geological data on the planet — and your outputs inform multi-million dollar drilling decisions.\n\nWe\'re hiring. If that sounds interesting, reach out or check our open roles via the link below.',
+    url: 'https://www.earthscan.io/about-us',
+    tags: ['#Hiring','#AIJobs','#GeoscienceAI','#DeepKapha'] }
+];
+
+// SVG icons
+const ICON_LINK = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+const ICON_COPY = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+const ICON_CHECK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+function buildCard(p, i) {
+  const m = PILLAR[p.pillar];
+  const isExt = p.pillar === 'ext';
+  const isES  = p.authors === 'EarthScan';
+  const cap = p.caption.replace(/\n/g, '<br>');
+  const tags = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  return `
+  <div class="card ${isExt ? 'ext' : ''}" data-pillar="${p.pillar}" id="card${i}">
+    <div class="card-top">
+      <span class="card-date">${p.date}</span>
+      <span class="card-badge ${m.badge}">${m.badgeText}</span>
+    </div>
+    <span class="card-pillar ${m.pillarCls}">
+      <span class="pillar-dot"></span>${m.label}
+    </span>
+    <div class="card-headline">${p.headline}</div>
+    ${!isES ? `<div class="card-authors">${p.authors}</div>` : ''}
+    <div class="card-caption">${cap}</div>
+    <a class="card-link" href="${p.url}" target="_blank" rel="noopener">${ICON_LINK} ${isExt ? 'Read the paper' : 'Read the post'}</a>
+    <div class="card-tags">${tags}</div>
+    <button class="copy-btn" id="btn${i}" onclick="copyCaption(${i})">${ICON_COPY} Copy caption</button>
+  </div>`;
+}
+
+// Render cards into week grids
+[1,2,3,4].forEach(w => {
+  const grid = document.getElementById('week' + w);
+  if (!grid) return;
+  POSTS.filter(p => p.week === w).forEach((p, localIdx) => {
+    const globalIdx = POSTS.indexOf(p);
+    grid.insertAdjacentHTML('beforeend', buildCard(p, globalIdx));
+  });
+});
+
+// Copy to clipboard
+function copyCaption(i) {
+  const p = POSTS[i];
+  const isES = p.authors === 'EarthScan';
+  const text = [
+    p.headline, '',
+    p.caption,
+    '',
+    isES ? '' : 'Source: ' + p.authors,
+    p.tags.join(' '),
+    '',
+    '🔗 ' + p.url
+  ].filter(l => l !== undefined).join('\n').trim();
+  navigator.clipboard.writeText(text).catch(() => {});
+  const btn = document.getElementById('btn' + i);
+  if (!btn) return;
+  btn.classList.add('ok');
+  btn.innerHTML = ICON_CHECK + ' Copied!';
+  setTimeout(() => { btn.classList.remove('ok'); btn.innerHTML = ICON_COPY + ' Copy caption'; }, 2200);
+}
+
+// Filter toggle
+let active = new Set(['ext','es','prod','tl','cult']);
+function toggle(key, el) {
+  if (active.has(key)) {
+    if (active.size === 1) return;
+    active.delete(key);
+    el.classList.add('off');
+  } else {
+    active.add(key);
+    el.classList.remove('off');
+  }
+  POSTS.forEach((p, i) => {
+    const card = document.getElementById('card' + i);
+    if (card) card.classList.toggle('hidden', !active.has(p.pillar));
+  });
+}
+</script>
+</body>
+</html>
